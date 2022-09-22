@@ -1,4 +1,5 @@
 + Fixed to use pwsh.exe (manually-installed powershell) for win 11 compatibility, add mutliple wsl env support
+
 Sudo for WSL
 ===============
 
