@@ -220,14 +220,15 @@ class UnprivilegedClient:
                 window_style = ['Hidden', 'Minimized', 'Normal'][visibility]
 
                 try:
+                    dist = os.environ.get('WSL_DISTRO_NAME', '')
                     subprocess.check_call(
-                        ["powershell.exe", "Start-Process", "-Verb", "runas",
+                        ["pwsh.exe", "-Command", "Start-Process", "-Verb", "runas",
                          "-WindowStyle", window_style,
                          "-FilePath", "wsl", "-ArgumentList",
-                         '"{}"'.format(subprocess.list2cmdline([
+                         ','.join([f'"{subprocess.list2cmdline([x])}"' for x in (['-d', dist] if dist != '' else []) + [
                              sys.executable, os.path.abspath(__file__),
                              '--elevated', 'visible' if visibility else 'hidden',
-                             str(port), pwf.name]))])
+                             str(port), pwf.name]])])
                 except subprocess.CalledProcessError as e:
                     print("wudo: failed to start elevated process")
                     return
